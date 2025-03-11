@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+        }
+        input, select {
+            background-color: #333 !important;
+            color: #fff !important;
+            border: 1px solid #444 !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center">Personal Expense Tracker</h2>
+    <div class="card p-3">
+        <form id="expenseForm">
+            <div class="mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <input type="number" class="form-control" id="amount" required>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-control" id="category">
+                    <option>Food</option>
+                    <option>Transport</option>
+                    <option>Entertainment</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="date" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Add Expense</button>
+        </form>
+    </div>
+
+    <h4 class="mt-4">Expenses</h4>
+    <table class="table table-dark table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="expenseTable"></tbody>
+    </table>
+
+    <button class="btn btn-success w-100 mt-3" id="exportCSV">Export to CSV</button>
+</div>
+
+<script>
+    const API_URL = "http://localhost:5000";
+
+    document.getElementById("expenseForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        let amount = document.getElementById("amount").value;
+        let category = document.getElementById("category").value;
+        let date = document.getElementById("date").value;
+
+        await fetch(`${API_URL}/add_expense`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ amount, category, date })
+        });
+
+        loadExpenses();
+        document.getElementById("expenseForm").reset();
+    });
+
+    async function loadExpenses() {
+        let response = await fetch(`${API_URL}/get_expenses`);
+        let expenses = await response.json();
+        let tableBody = document.getElementById("expenseTable");
+        tableBody.innerHTML = "";
+
+        expenses.forEach(expense => {
+            let row = tableBody.insertRow();
+            row.insertCell(0).innerText = expense.amount;
+            row.insertCell(1).innerText = expense.category;
+            row.insertCell(2).innerText = expense.date;
+        });
+    }
+
+    document.getElementById("exportCSV").addEventListener("click", function() {
+        window.location.href = `${API_URL}/download_csv`;
+    });
+
+    loadExpenses();
+</script>
+
+</body>
+</html>
