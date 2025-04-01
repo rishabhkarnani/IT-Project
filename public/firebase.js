@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, push, set, get, remove, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-// Add the missing `databaseURL` field here
+// Add the missing databaseURL field here
 const firebaseConfig = {
   apiKey: "AIzaSyBa-9az1mvA2lVO5tsAKuHtyxuz0IdRvFc",
   authDomain: "itproject-1d0a1.firebaseapp.com",
