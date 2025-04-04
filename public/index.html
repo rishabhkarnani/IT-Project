@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Basic page setup -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Advanced Expense Tracker</title>
+  <!-- Link to external CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
+    <!-- Main title -->
     <h1 class="title">📊 Advanced Expense Tracker</h1>
 
+    <!-- Expense input form -->
     <form id="expenseForm" class="form">
+      <!-- Input for expense name -->
       <input type="text" id="expenseName" placeholder="Expense Name (e.g., Netflix)" required />
+      <!-- Input for expense amount -->
       <input type="number" id="amount" placeholder="Amount (e.g., 50000)" max="999999" required />
 
+      <!-- Dropdown for expense category -->
       <select id="category" required>
         <option value="">Select Category</option>
         <option value="Food">🍔 Food</option>
@@ -28,17 +35,23 @@
         <option value="Other">❓ Other</option>
       </select>
 
+      <!-- Dropdown for expense type -->
       <select id="expenseType" required>
         <option value="">Select Type</option>
         <option value="Fixed">📌 Fixed</option>
         <option value="Variable">📉 Variable</option>
       </select>
 
+      <!-- Date input for expense -->
       <input type="date" id="date" required />
+      <!-- Submit button to add expense -->
       <button type="submit" class="add-btn">➕ Add Expense</button>
     </form>
 
+    <!-- Expense list title -->
     <h2 class="sub-title">💰 Your Expenses</h2>
+
+    <!-- Table to display added expenses -->
     <table class="expense-table">
       <thead>
         <tr>
@@ -50,18 +63,24 @@
           <th>Action</th>
         </tr>
       </thead>
+      <!-- Dynamic expense rows will be added here -->
       <tbody id="expenseTable"></tbody>
     </table>
 
+    <!-- Button to download expenses as CSV -->
     <button id="exportCSV" class="export-btn">Download Expenses</button>
 
+    <!-- AI Tips section -->
     <div class="ai-section">
       <h3>🤖 AI Expense Tips</h3>
+      <!-- Tip message placeholder -->
       <p id="aiTip">🧠 Add some expenses and I'll give you money-saving tips!</p>
     </div>
   </div>
 
+  <!-- Firebase integration -->
   <script type="module" src="firebase.js"></script>
+  <!-- Main logic script -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
