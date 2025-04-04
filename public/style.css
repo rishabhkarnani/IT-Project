@@ -1,33 +1,38 @@
+/* Basic body styles */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: url('background.jpg') no-repeat center center fixed;
+  background: url('background.jpg') no-repeat center center fixed; /* Background image */
   background-size: cover;
-  color: #fff;
+  color: #fff; /* White text */
 }
 
+/* Main container for the app */
 .container {
   max-width: 800px;
   margin: 3rem auto;
   padding: 30px;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.85); /* Dark transparent background */
   border-radius: 15px;
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); /* Gold glow effect */
 }
 
+/* Main title style */
 .title {
   text-align: center;
   font-size: 32px;
   margin-bottom: 20px;
-  color: #ffd700;
+  color: #ffd700; /* Gold */
 }
 
+/* Subtitle for sections */
 .sub-title {
   text-align: center;
-  color: #ffc107;
+  color: #ffc107; 
   margin-top: 2rem;
 }
 
+/* Style inputs and selects inside the form */
 .form input,
 .form select {
   width: 100%;
@@ -36,14 +41,15 @@ body {
   border-radius: 8px;
   border: none;
   font-size: 16px;
-  background: #333;
-  color: #fff;
+  background: #333; /* Dark input background */
+  color: #fff; /* White text */
 }
 
+/* Add expense button */
 .add-btn {
   width: 100%;
   padding: 14px;
-  background-color: #007bff;
+  background-color: #007bff; /* Blue */
   color: white;
   border: none;
   font-size: 18px;
@@ -53,23 +59,26 @@ body {
 }
 
 .add-btn:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
+/* Expense table styles */
 .expense-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
 }
 
+/* Table header and cell styles */
 .expense-table th,
 .expense-table td {
   padding: 12px;
   text-align: center;
   background: #222;
-  border: 1px solid #444;
+  border: 1px solid #444; /* Dark borders */
 }
 
+/* Export CSV button */
 .export-btn {
   display: block;
   margin: 1rem auto;
@@ -85,11 +94,12 @@ body {
   background: darkorange;
 }
 
+/* AI tip section at the bottom */
 .ai-section {
   margin-top: 30px;
   text-align: center;
   background: #111;
   padding: 15px;
   border-radius: 12px;
-  border-top: 2px solid #ffc107;
+  border-top: 2px solid #ffc107; /* Amber border top */
 }
