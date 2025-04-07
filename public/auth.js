@@ -1,39 +1,38 @@
-// Handle Login
-document.getElementById("loginForm")?.addEventListener("submit", async function(e) {
+document.getElementById("loginForm")?.addEventListener("submit", async function (e) {
     e.preventDefault();
-    let username = document.getElementById("loginUsername").value;
-    let password = document.getElementById("loginPassword").value;
-
-    let response = await fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+    const username = document.getElementById("loginUsername").value;
+    const password = document.getElementById("loginPassword").value;
+  
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
     });
-
-    let data = await response.json();
-    if (response.ok) {
-        window.location.href = data.redirect;
+  
+    const data = await res.json();
+    if (res.ok) {
+      window.location.href = data.redirect;
     } else {
-        alert(data.error);
+      alert(data.error);
     }
-});
-
-// Handle Signup
-document.getElementById("signupForm")?.addEventListener("submit", async function(e) {
+  });
+  
+  document.getElementById("signupForm")?.addEventListener("submit", async function (e) {
     e.preventDefault();
-    let username = document.getElementById("signupUsername").value;
-    let password = document.getElementById("signupPassword").value;
-
-    let response = await fetch("/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+    const username = document.getElementById("signupUsername").value;
+    const password = document.getElementById("signupPassword").value;
+  
+    const res = await fetch("/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
     });
-
-    let data = await response.json();
-    if (response.ok) {
-        window.location.href = data.redirect;
+  
+    const data = await res.json();
+    if (res.ok) {
+      window.location.href = data.redirect;
     } else {
-        alert(data.error);
+      alert(data.error);
     }
-});
+  });
+  
