@@ -4,59 +4,106 @@ const API_URL = "http://localhost:5000";
 document.getElementById("expenseForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    let expenseName = document.getElementById("expenseName").value;
-    let amount = parseFloat(document.getElementById("amount").value);
-    let category = document.getElementById("category").value;
-    let expenseType = document.getElementById("expenseType").value;
-    let date = document.getElementById("date").value;
+    const name = document.getElementById("expenseName").value;
+    const amount = parseFloat(document.getElementById("amount").value);
+    const category = document.getElementById("category").value;
+    const type = document.getElementById("expenseType").value;
+    const date = document.getElementById("date").value;
 
-    await fetch(`${API_URL}/add_expense`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ expenseName, amount, category, expenseType, date })
-    });
+    try {
+        const res = await fetch("/add-expense", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, amount, category, type, date }),
+        });
 
-    loadExpenses();
-    document.getElementById("expenseForm").reset();
+        const data = await res.json();
+
+        if (res.ok) {
+            alert(data.message);
+            document.getElementById("expenseForm").reset();
+            loadExpenses(); // If this updates the UI
+        } else {
+            alert(data.error);
+        }
+    } catch (err) {
+        alert("Failed to save expense. Please try again.");
+    }
 });
 
-// Load expenses 
+//Load and show expenses
 async function loadExpenses() {
-    let response = await fetch(`${API_URL}/get_expenses`);
-    let expenses = await response.json();
-    let tableBody = document.getElementById("expenseTable");
+    const res = await fetch("/expenses");
+    const expenses = await res.json();
+
+    console.log("Expenses from server:", expenses);
+
+    const tableBody = document.getElementById("expenseTable");
     tableBody.innerHTML = "";
 
-    let totalSpending = 0;
-    let categorySpendings = {};
+    expenses.forEach((exp, index) => {
+        const row = document.createElement("tr");
 
-    expenses.forEach((expense, index) => {
-        let row = tableBody.insertRow();
-        row.insertCell(0).innerText = expense.expenseName || "Unknown";
-        row.insertCell(1).innerText = "$" + expense.amount;
-        row.insertCell(2).innerText = expense.category;
-        row.insertCell(3).innerText = expense.expenseType;
-        row.insertCell(4).innerText = expense.date;
+        row.innerHTML = `
+            <td>${exp.Name}</td>
+            <td>${exp.Amount}</td>
+            <td>${exp.Category}</td>
+            <td>${exp.Type}</td>
+            <td>${exp.Date}</td>
+            <td>
+                <button class="btn delete-btn" onclick="deleteExpense(${index})">❌ Delete</button>
+            </td>
+        `;
 
-        let deleteBtn = document.createElement("button");
-        deleteBtn.innerText = "🗑 Delete";
-        deleteBtn.className = "delete-btn";
-        deleteBtn.onclick = function () {
-            deleteExpense(index);
-        };
-        row.insertCell(5).appendChild(deleteBtn);
+        tableBody.appendChild(row);
 
-        totalSpending += parseFloat(expense.amount);
-
-        if (categorySpendings[expense.category]) {
-            categorySpendings[expense.category] += parseFloat(expense.amount);
-        } else {
-            categorySpendings[expense.category] = parseFloat(expense.amount);
-        }
+    
     });
-
-    updateAITip(totalSpending, categorySpendings);
 }
+
+//Loads expenses on page load.
+document.addEventListener("DOMContentLoaded", () => {
+    loadExpenses();
+});
+
+//Deletes an expense
+async function deleteExpense(index) {
+    const confirmed = confirm("Are you sure you want to delete this expense?");
+    if (!confirmed) return;
+
+    try {
+        const res = await fetch(`/delete-expense/${index}`, {
+            method: "DELETE"
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert(data.message);
+            loadExpenses();
+        } else {
+            alert(data.error);
+        }
+    } catch (err) {
+        alert("Failed to delete expense.");
+    }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadExpenses();
+});
+
+//Logout button.
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    fetch("/logout")
+        .then(() => {
+            window.location.href = "/login.html";
+        })
+        .catch(() => {
+            alert("Logout failed");
+        });
+});
 
 // AI-powered smart suggestions (We are still working on it)
 function updateAITip(totalSpending, categorySpendings) {
@@ -78,13 +125,14 @@ function updateAITip(totalSpending, categorySpendings) {
 
 //  Handle delete expense
 async function deleteExpense(index) {
-    await fetch(`${API_URL}/delete_expense/${index}`, { method: "DELETE" });
+    await fetch(`${API_URL}/delete-expense/${index}`, { method: "DELETE" });
     loadExpenses();
 }
 
 //  Export Button
-document.getElementById("exportCSV").addEventListener("click", function() {
-    window.location.href = `${API_URL}/download_csv`;
+document.getElementById("exportCSV").addEventListener("click", () => {
+    window.location.href = "/export";
 });
 
 loadExpenses();
+
