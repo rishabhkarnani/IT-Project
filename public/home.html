@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Expense Tracker</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>📊 Advanced Expense Tracker</h1>
+    <button id="logoutBtn" class="btn logout-btn">🚪 Logout</button>
+    <div class="expense-form">
+        <form id="expenseForm">
+            <input type="text" id="expenseName" placeholder="Expense Name (e.g., Netflix Subscription)" required>
+            <input type="number" id="amount" placeholder="Amount (e.g., 50000)" required>
+
+            <select id="category">
+                <option value="Food">🍔 Food</option>
+                <option value="Transport">🚗 Transport</option>
+                <option value="Entertainment">🎬 Entertainment</option>
+                <option value="Shopping">🛍 Shopping</option>
+                <option value="Health">🏥 Health</option>
+                <option value="Utilities">⚡ Utilities</option>
+                <option value="Investment">📈 Investment</option>
+                <option value="Education">📚 Education</option>
+                <option value="Rent">🏠 Rent</option>
+                <option value="Subscriptions">📺 Subscriptions</option>
+                <option value="Debt Payments">💳 Debt Payments</option>
+                <option value="Gifts & Donations">🎁 Gifts & Donations</option>
+                <option value="Travel">✈️ Travel</option>
+                <option value="Other">❓ Other</option>
+            </select>
+
+            <select id="expenseType">
+                <option value="Fixed">📌 Fixed</option>
+                <option value="Variable">🔄 Variable</option>
+                <option value="Subscription">🔁 Subscription</option>
+                <option value="One-Time">💸 One-Time</option>
+                <option value="Recurring">🔂 Recurring</option>
+            </select>
+
+            <input type="date" id="date" required>
+
+            <button type="submit" class="btn">➕ Add Expense</button>
+        </form>
+    </div>
+
+    <h2>💰 Your Expenses</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="expenseTable"></tbody>
+    </table>
+
+    <button id="exportCSV" class="btn export-btn">📂 Export</button>
+
+    <div class="ai-suggestions">
+        <h2>🤖 We are still figuring out how we are going to implement the AI feature for suggestions</h2>
+        <p id="aiTip">Loading tips...</p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
