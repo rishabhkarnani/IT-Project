@@ -1,4 +1,3 @@
-// ... import and setup
 import { db, ref, push, get, remove, update } from './firebase.js';
 
 const expenseForm = document.getElementById("expenseForm");
@@ -15,7 +14,6 @@ async function loadExpenses(filtered = false) {
   const snapshot = await get(expensesRef);
   table.innerHTML = "";
   allExpenses = {};
-  let total = 0;
   let filteredCount = 0;
 
   if (snapshot.exists()) {
@@ -32,12 +30,11 @@ async function loadExpenses(filtered = false) {
       if (!categoryMatch || !typeMatch) return;
 
       filteredCount++;
-      total += parseFloat(exp.amount);
 
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${exp.expenseName}</td>
-        <td>₹${exp.amount}</td>
+        <td>$${exp.amount}</td>
         <td>${exp.category}</td>
         <td>${exp.expenseType}</td>
         <td>${exp.date}</td>
@@ -46,7 +43,6 @@ async function loadExpenses(filtered = false) {
           <button onclick="deleteExpense('${id}')" class="delete-btn">🗑️</button>
         </td>
       `;
-
       row.addEventListener("click", (e) => {
         if (!["BUTTON", "svg", "path"].includes(e.target.tagName)) {
           showAnalyticsModal(exp);
@@ -57,10 +53,6 @@ async function loadExpenses(filtered = false) {
     });
   }
 
-  document.getElementById("totalExpense").textContent = total;
-  document.getElementById("monthlyEstimate").textContent = (total / 30).toFixed(2);
-
-  // Hide chart if nothing is shown
   chartSection.style.display = filteredCount > 0 ? "block" : "none";
 }
 
@@ -72,7 +64,7 @@ expenseForm.addEventListener("submit", async (e) => {
   const type = document.getElementById("expenseType").value;
   const date = document.getElementById("date").value;
 
-  if (!validateName(name)) return alert("❌ Name must contain only letters.");
+  if (!validateName(name)) return alert("❌ Name must only contain letters.");
   if (isNaN(amount) || amount <= 0) return alert("❌ Enter a valid amount.");
 
   const id = expenseForm.dataset.editId;
@@ -106,33 +98,25 @@ window.deleteExpense = async (id) => {
 
 window.editExpense = (id) => {
   const exp = allExpenses[id];
-
   const modal = document.createElement("div");
   modal.className = "modal analytics-modal";
 
   modal.innerHTML = `
     <div class="modal-content analytics-popup">
       <h3>✏️ Edit Expense: <span style="color:#ffc107">${exp.expenseName}</span></h3>
-      <hr style="border-color: #444; margin-bottom: 16px;" />
-      
       <form id="editForm">
-        <input type="text" id="editName" placeholder="Name" value="${exp.expenseName}" required />
-        <input type="number" id="editAmount" placeholder="Amount" value="${exp.amount}" required />
-        
-        <select id="editCategory" required>
+        <input type="text" id="editName" value="${exp.expenseName}" required />
+        <input type="number" id="editAmount" value="${exp.amount}" required />
+        <select id="editCategory">
           ${["Food", "Transport", "Entertainment", "Shopping", "Health", "Utilities", "Investment", "Education", "Gifts & Donations", "Other"]
-            .map(cat => `<option value="${cat}" ${cat === exp.category ? "selected" : ""}>${cat}</option>`)
-            .join("")}
+            .map(cat => `<option value="${cat}" ${cat === exp.category ? "selected" : ""}>${cat}</option>`).join("")}
         </select>
-
-        <select id="editType" required>
+        <select id="editType">
           <option value="Fixed" ${exp.expenseType === "Fixed" ? "selected" : ""}>Fixed</option>
           <option value="Variable" ${exp.expenseType === "Variable" ? "selected" : ""}>Variable</option>
         </select>
-
         <input type="date" id="editDate" value="${exp.date}" required />
-
-        <button type="submit" class="add-btn">💾 Save Changes</button>
+        <button type="submit" class="add-btn">💾 Save</button>
         <button type="button" class="close-btn" onclick="document.querySelector('.analytics-modal').remove()">❌ Cancel</button>
       </form>
     </div>
@@ -156,7 +140,6 @@ window.editExpense = (id) => {
   });
 };
 
-
 function showAnalyticsModal(expense) {
   const dayOfWeek = new Date(expense.date).toLocaleDateString('en-US', { weekday: 'long' });
   const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -166,23 +149,14 @@ function showAnalyticsModal(expense) {
 
   modal.innerHTML = `
     <div class="modal-content analytics-popup">
-      <h3>📊 Detailed Insights: <span style="color:#ffc107">${expense.expenseName}</span></h3>
-      <hr style="border-color: #444; margin-bottom: 16px;" />
-      <p><strong>📌 Expense ID:</strong> <code style="color:#bbb;">(auto-generated)</code></p>
-      <p><strong>💰 Amount:</strong> ₹${expense.amount}</p>
-      <p><strong>📂 Category:</strong> ${expense.category}</p>
-      <p><strong>📉 Type:</strong> ${expense.expenseType}</p>
-      <p><strong>📅 Date:</strong> ${expense.date} (${dayOfWeek})</p>
-      <p><strong>🕓 Time Logged:</strong> ${now}</p>
-      <p><strong>🔁 Monthly?</strong> ${expense.expenseType === "Fixed" ? "Yes (Auto-assumed)" : "No"}</p>
-
-      <canvas id="analyticsChart" width="360" height="200" style="margin: 15px 0;"></canvas>
-
-      <div class="suggestion-box">
-        <span class="emoji">💡</span>
-        <span class="suggestion-text">${generateTip(expense)}</span>
-      </div>
-
+      <h3>📊 Insights: <span style="color:#ffc107">${expense.expenseName}</span></h3>
+      <p><strong>Amount:</strong> $${expense.amount}</p>
+      <p><strong>Category:</strong> ${expense.category}</p>
+      <p><strong>Type:</strong> ${expense.expenseType}</p>
+      <p><strong>Date:</strong> ${expense.date} (${dayOfWeek})</p>
+      <p><strong>Logged At:</strong> ${now}</p>
+      <canvas id="analyticsChart" width="360" height="200"></canvas>
+      <p class="suggestion">💡 ${generateTip(expense)}</p>
       <button class="close-btn" onclick="document.querySelector('.analytics-modal').remove()">❌ Close</button>
     </div>
   `;
@@ -191,15 +165,13 @@ function showAnalyticsModal(expense) {
   drawChart(expense);
 }
 
-
 function generateTip(exp) {
   if (exp.category === "Shopping" || exp.category === "Entertainment") {
-    return "🛍 Tip: Try keeping fun expenses under 10% of your monthly income.";
+    return "Try to keep these expenses under 10% of monthly budget.";
+  } else if (exp.amount > 5000) {
+    return "Large spend! Consider reviewing this expense.";
   }
-  if (exp.amount > 5000) {
-    return "💸 This is a large spend. Consider splitting or reviewing this.";
-  }
-  return "✅ Great! This expense seems well within a healthy range.";
+  return "Great! This expense looks healthy.";
 }
 
 function drawChart(exp) {
@@ -215,9 +187,7 @@ function drawChart(exp) {
     },
     options: {
       plugins: {
-        legend: {
-          labels: { color: "#fff" }
-        }
+        legend: { labels: { color: "#fff" } }
       }
     }
   });

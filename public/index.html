@@ -11,11 +11,10 @@
   <div class="container">
     <h1 class="title">📊 Advanced Expense Tracker</h1>
 
-    <!-- Expense Form -->
     <form id="expenseForm" class="form">
       <input type="text" id="expenseName" placeholder="Expense Name (letters only)" required />
-      <input type="number" id="amount" placeholder="Amount (e.g., 5000)" required />
-      
+      <input type="number" id="amount" placeholder="Amount in $" required />
+
       <select id="category" required>
         <option value="">Select Category</option>
         <option value="Food">🍔 Food</option>
@@ -26,7 +25,7 @@
         <option value="Utilities">⚡ Utilities</option>
         <option value="Investment">📈 Investment</option>
         <option value="Education">🎓 Education</option>
-        <option value="Gifts & Donations">🎁 Gifts & Donations</option>
+        <option value="Gifts & Donations">🎁 Gifts</option>
         <option value="Other">❓ Other</option>
       </select>
 
@@ -40,7 +39,7 @@
       <button type="submit" class="add-btn">➕ Add Expense</button>
     </form>
 
-    <!-- Filter Bar -->
+    <!-- Filters -->
     <div class="filter-bar">
       <select id="filterCategory">
         <option value="">Filter by Category</option>
@@ -65,14 +64,7 @@
       <button id="clearFilters">🔄 Reset</button>
     </div>
 
-    <!-- Summary -->
-    <div class="summary-box">
-      <h3>📅 Summary</h3>
-      <p><strong>Total Expenses:</strong> $<span id="totalExpense">0</span></p>
-      <p><strong>Monthly Estimate:</strong> $<span id="monthlyEstimate">0</span></p>
-    </div>
-
-    <!-- Expenses Table -->
+    <!-- Table -->
     <h2 class="sub-title">💰 Your Expenses</h2>
     <div class="table-container">
       <table class="expense-table">
@@ -90,16 +82,12 @@
       </table>
     </div>
 
-    <!-- Chart -->
+    <!-- Chart Section -->
     <div class="chart-section">
-      <canvas id="analyticsChart" width="380" height="220"></canvas>
+      <canvas id="analyticsChart"></canvas>
     </div>
   </div>
 
-  <!-- Edit Modal (optional for inline edit) -->
-  <div id="analyticsContainer"></div>
-
-  <!-- Firebase & Logic -->
   <script type="module" src="firebase.js"></script>
   <script type="module" src="script.js"></script>
 </body>
